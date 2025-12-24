@@ -11,7 +11,7 @@ class MovieListCreateView(APIView):
     def get(self):
         movies = Movie.objects.all()
         serializer = MovieSerializer(movies, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = MovieSerializer(data=request.data)
@@ -21,19 +21,19 @@ class MovieListCreateView(APIView):
 
 
 class MovieDetailView(APIView):
-    def get(self, pk):
+    def get(self, request, pk):
         movie = get_object_or_404(Movie, pk=pk)
         serializer = MovieSerializer(movie)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
         movie = get_object_or_404(Movie, pk=pk)
         serializer = MovieSerializer(movie, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def delete(self, pk):
+    def delete(self, request, pk):
         movie = get_object_or_404(Movie, pk=pk)
         movie.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
